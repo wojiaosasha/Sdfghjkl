@@ -1,4 +1,23 @@
 body {
+  font-family: Arial, Verdana, sans-serif;
+  font-size: 11pt;
+}
+article {
+  margin: 150px 320px 0px 320px; /*верх, право, низ, лево*/
+}
+.contimage {
+  float: right;
+  margin: 7px 0 7px 7px;
+  width: 250px;
+}
+.text {
+  border-left: 1px solid #999; /* Параметры линии слева */
+  border-bottom: 1px solid #999; /* Параметры линии снизу */
+  padding-left: 10px; /* Отступ от линии слева до текста  */
+  padding-bottom: 10px; /* Отступ от линии снизу до текста  */
+}
+
+body {
   font-family: Arial, Verdana, sans-serif; /* Семейство шрифтов */
   font-size: 11pt; /* Размер основного шрифта в пунктах  */
   background-color: #f0f0f0; /* Цвет фона веб-страницы */
