@@ -68,16 +68,15 @@ struct bin_tree
 			}
 			else if ((*del)->right != NULL) //есть правый потомок (но нет левого)
 			{
-				Node* tmp = (*del)->right;
-				(*del)->val = (*del)->right->val;
-				(*del)->right = (*del)->right->right;
+				Node* tmp = (*del);
+				(*del) = (*del)->right;
 				delete tmp; //правое поддерево переносится на место удаляемого элемента
+
 			}
 			else if ((*del)->left != NULL) //есть левый потомок (но нет правого)
 			{
-				Node* tmp = (*del)->left;
-				(*del)->val = (*del)->left->val;
-				(*del)->left = (*del)->left->left;
+				Node* tmp = (*del);
+				(*del) = (*del)->left;
 				delete tmp; //левое поддерево переносится на место удаляемого элемента
 			}
 			else //нет потомков
@@ -107,7 +106,7 @@ struct bin_tree
 int main()
 {
 	bin_tree oak;
-	for (int i=0; i<1000; i++)
+	for (int i = 0; i < 1000; i++)
 	{
 		string com;
 		cin >> com;
