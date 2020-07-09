@@ -1,0 +1,93 @@
+.leftsidebar {
+  margin: 0;
+  padding: 0;
+  width: 100px;
+  position: absolute;
+  top: 100px;
+  left: 6%;
+}
+
+.leftsidebar img {
+  width: 120x;
+  height: 120px;
+  display: block;
+  padding: 10px;
+}
+
+.rightcontent {
+  margin: 0;
+  padding: 10px;
+  height: 400px;
+  width: 150px;
+  position: absolute;
+  top: 100px;
+  right: 6%;
+}
+
+.centercontent {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 100px;
+  right: 30%;
+  left: 30%;
+}
+
+.centercontent .main {
+  height: 400px;
+  padding: 10px;
+  position: absolute;
+  left: 10%;
+  right: 10%;
+}
+
+.centercontent .aboutuslf {
+  text-align: justify;
+  position: relative;
+  bottom: 40px;
+}
+
+.centercontent .aboutuslf > img {
+  float: right;
+  width: 250px;
+  padding-left: 20px;
+}
+
+.centercontent > h2 {
+  text-align: center;
+  position: relative;
+  bottom: 30px;
+}
+
+.centercontent .poem {
+  font-size: 150%;
+  text-align: center;
+}
+
+.centercontent .author {
+  font-style: italic;
+  text-align: right;
+  font-size: 110%;
+  position: relative;
+  top: 10px;
+}
+
+.menu {
+  position: absolute;
+  top: 40px;
+  left: 33%;
+  right: 33%;
+}
+
+.menu a {
+  text-align: center;
+  padding: 9%;
+  position: relative;
+  left: 4%;
+}
+
+.footer {
+  position: absolute;
+  left: 88%;
+  top: 580px;
+}
