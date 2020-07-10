@@ -1,0 +1,70 @@
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>5.1</title>
+    <script>
+      var animals = [
+        {
+          name: "Животные",
+          children: [
+            {
+              name: "Млекопитающие",
+              children: [
+                { name: "Коровы" },
+                { name: "Ослы" },
+                { name: "Собаки" },
+                { name: "Тигры" },
+              ],
+            },
+            {
+              name: "Другие",
+              children: [
+                { name: "Змеи" },
+                { name: "Птицы" },
+                { name: "Ящерицы" },
+              ],
+            },
+          ],
+        },
+        {
+          name: "Рыбы",
+          children: [
+            {
+              name: "Аквариумные",
+              children: [{ name: "Гуппи" }, { name: "Скалярии" }],
+            },
+            {
+              name: "Морские",
+              children: [{ name: "Морская форель" }],
+            },
+          ],
+        },
+      ];
+
+      function generate(array) {
+        var html = "<ul>";
+        array.forEach((item) => {
+          var li = "<li>";
+          html += li + item.name;
+          if (item.children) {
+            html += generate(item.children);
+          }
+          html += "</li>";
+        });
+        html += "</ul>";
+        return html;
+      }
+      function smth() {
+        document.body.innerHTML = generate(animals);
+      }
+    </script>
+  </head>
+
+  <body>
+    <script>
+      smth();
+    </script>
+  </body>
+</html>
