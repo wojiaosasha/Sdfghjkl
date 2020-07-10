@@ -1,0 +1,326 @@
+<html>
+  <head>
+    <title>6</title>
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/mootools/1.6.0/mootools-core.js"
+    ></script>
+    <script type="text/javascript">
+      var canvas,
+        ctx,
+        balls,
+        idTimer = null;
+      TBall = new Class({
+        initialize: function (pX, pY) {
+          this.posX = pX; //позиция шарика по X
+          this.posY = pY; //позиция шарика по Y
+          //цвет шарика, формируется случайным оьразом
+          this.colBall =
+            "rgb(" +
+            Math.floor(Math.random() * 256) +
+            "," +
+            Math.floor(Math.random() * 256) +
+            "," +
+            Math.floor(Math.random() * 256) +
+            ")";
+          // радиус шарика, случайное число от 5 до 30
+          this.rBall = 5 + Math.random() * 25;
+        },
+        posX: 0,
+        posY: 0,
+        colBall: "rgb(0,0,0)",
+        rBall: 0,
+        colorBall: function (ctx) {
+          // формируем градиентную заливку для шарика
+          with (this) {
+            var gradient = ctx.createRadialGradient(
+              posX + rBall / 4,
+              posY - rBall / 6,
+              rBall / 8,
+              posX,
+              posY,
+              rBall
+            );
+            gradient.addColorStop(0, "#fff");
+            gradient.addColorStop(0.85, colBall);
+            return gradient;
+          }
+        },
+        draw: function (ctx) {
+          // рисуем шарик на canvas
+          with (this) {
+            ctx.fillStyle = colorBall(ctx);
+            ctx.beginPath();
+            ctx.arc(posX, posY, rBall, 0, 2 * Math.PI, false);
+            ctx.closePath();
+            ctx.fill();
+          }
+        },
+      });
+      function drawBack(ctx, col1, col2, w, h) {
+        // закрашиваем канвас градиентным фоном
+        ctx.save();
+        var g = ctx.createLinearGradient(0, 0, 0, h);
+        g.addColorStop(1, col1);
+        g.addColorStop(0, col2);
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, w, h);
+        ctx.restore();
+      }
+      // инициализация работы
+      function init() {
+        canvas = document.getElementById("canvas");
+        if (canvas.getContext) {
+          ctx = canvas.getContext("2d");
+          //рисуем фон
+          drawBack(ctx, "#202020", "#aaa", canvas.width, canvas.height);
+          //создаем 10 шариков, заноси их в массив и выводим на canvas
+          balls = [];
+          for (var i = 1; i <= 10; i++) {
+            var item = new TBall(
+              10 + Math.random() * (canvas.width - 30),
+              10 + Math.random() * (canvas.height - 30)
+            );
+            item.draw(ctx);
+            balls.push(item);
+          }
+        }
+      }
+      // создаем новый шарик по щелчку мыши, добавляем его в массив шариков и рисуем его
+      function goInput(event) {
+        var x = event.clientX;
+        var y = event.clientY;
+        var item = new TBall(x, y);
+        item.draw(ctx);
+        balls.push(item);
+      }
+      function moveBallUp() {
+        //реализация движения шариков, находящихся в массиве balls
+        drawBack(ctx, "#202020", "#aaa", canvas.width, canvas.height);
+        for (var i = 0; i < balls.length; i) {
+          balls[i].posX = balls[i].posX + (Math.random() * 4 - 2);
+          balls[i].posY = balls[i].posY + (Math.random() * 2 - 4);
+          balls[i].draw(ctx);
+          if (
+            balls[i].posX > canvas.width ||
+            balls[i].posX < 0 ||
+            balls[i].posY < 0 ||
+            balls[i].posY > canvas.height
+          )
+            balls.splice(i, 1);
+          else i++;
+        }
+      }
+      function moveBallDown() {
+        //реализация движения шариков, находящихся в массиве balls
+        drawBack(ctx, "#202020", "#aaa", canvas.width, canvas.height);
+        for (var i = 0; i < balls.length; i) {
+          balls[i].posX = balls[i].posX + (Math.random() * 4 - 2);
+          balls[i].posY = balls[i].posY + (Math.random() * 2 + 3);
+          balls[i].draw(ctx);
+          if (
+            balls[i].posX > canvas.width ||
+            balls[i].posX < 0 ||
+            balls[i].posY < 0 ||
+            balls[i].posY > canvas.height
+          )
+            balls.splice(i, 1);
+          else i++;
+        }
+      }
+      function moveBallLeft() {
+        //реализация движения шариков, находящихся в массиве balls
+        drawBack(ctx, "#202020", "#aaa", canvas.width, canvas.height);
+        for (var i = 0; i < balls.length; i) {
+          balls[i].posX = balls[i].posX + (Math.random() * 2 - 4);
+          balls[i].posY = balls[i].posY + (Math.random() * 4 - 2);
+          balls[i].draw(ctx);
+          if (
+            balls[i].posX > canvas.width ||
+            balls[i].posX < 0 ||
+            balls[i].posY < 0 ||
+            balls[i].posY > canvas.height
+          )
+            balls.splice(i, 1);
+          else i++;
+        }
+      }
+      function moveBallRight() {
+        //реализация движения шариков, находящихся в массиве balls
+        drawBack(ctx, "#202020", "#aaa", canvas.width, canvas.height);
+        for (var i = 0; i < balls.length; i) {
+          balls[i].posX = balls[i].posX + (Math.random() * 2 + 3);
+          balls[i].posY = balls[i].posY + (Math.random() * 4 - 2);
+          balls[i].draw(ctx);
+          if (
+            balls[i].posX > canvas.width ||
+            balls[i].posX < 0 ||
+            balls[i].posY < 0 ||
+            balls[i].posY > canvas.height
+          )
+            balls.splice(i, 1);
+          else i++;
+        }
+      }
+      function moveBallRandom() {
+        //реализация движения шариков, находящихся в массиве balls
+        drawBack(ctx, "#202020", "#aaa", canvas.width, canvas.height);
+        for (var i = 0; i < balls.length; i) {
+          if (balls[i].dirInRandom === null)
+            balls[i].dirInRandom = Math.floor(Math.random() * Math.floor(4));
+          switch (balls[i].dirInRandom) {
+            case 0:
+              balls[i].posX = balls[i].posX + (Math.random() * 4 - 2);
+              balls[i].posY = balls[i].posY + (Math.random() * 2 - 4);
+              break;
+            case 1:
+              balls[i].posX = balls[i].posX + (Math.random() * 4 - 2);
+              balls[i].posY = balls[i].posY + (Math.random() * 2 + 2);
+              break;
+            case 2:
+              balls[i].posX = balls[i].posX + (Math.random() * 2 - 4);
+              balls[i].posY = balls[i].posY + (Math.random() * 4 - 2);
+              break;
+            case 3:
+              balls[i].posX = balls[i].posX + (Math.random() * 2 + 2);
+              balls[i].posY = balls[i].posY + (Math.random() * 4 - 2);
+              break;
+            default:
+              break;
+          }
+          balls[i].draw(ctx);
+          if (
+            balls[i].posX > canvas.width ||
+            balls[i].posX < 0 ||
+            balls[i].posY < 0 ||
+            balls[i].posY > canvas.height
+          )
+            balls.splice(i, 1);
+          else i++;
+        }
+      }
+      function moveBallChaos() {
+        //реализация движения шариков, находящихся в массиве balls
+        drawBack(ctx, "#202020", "#aaa", canvas.width, canvas.height);
+        for (var i = 0; i < balls.length; i) {
+          dir = Math.floor(Math.random() * Math.floor(4));
+          switch (dir) {
+            case 0:
+              balls[i].posX = balls[i].posX + (Math.random() * 4 - 2);
+              balls[i].posY = balls[i].posY + (Math.random() * 2 - 4);
+              break;
+            case 1:
+              balls[i].posX = balls[i].posX + (Math.random() * 4 - 2);
+              balls[i].posY = balls[i].posY + (Math.random() * 2 + 2);
+              break;
+            case 2:
+              balls[i].posX = balls[i].posX + (Math.random() * 2 - 4);
+              balls[i].posY = balls[i].posY + (Math.random() * 4 - 2);
+              break;
+            case 3:
+              balls[i].posX = balls[i].posX + (Math.random() * 2 + 2);
+              balls[i].posY = balls[i].posY + (Math.random() * 4 - 2);
+              break;
+            default:
+              break;
+          }
+          balls[i].draw(ctx);
+          if (
+            balls[i].posX > canvas.width ||
+            balls[i].posX < 0 ||
+            balls[i].posY < 0 ||
+            balls[i].posY > canvas.height
+          )
+            balls.splice(i, 1);
+          else i++;
+        }
+      }
+
+      /* Moving and stopping funcs */
+      function moveUp(speed) {
+        if (idTimer === null) idTimer = moveBallUp.periodical(speed);
+      }
+
+      function moveDown(speed) {
+        if (idTimer === null) idTimer = moveBallDown.periodical(speed);
+      }
+
+      function moveLeft(speed) {
+        if (idTimer === null) idTimer = moveBallLeft.periodical(speed);
+      }
+
+      function moveRight(speed) {
+        if (idTimer === null) idTimer = moveBallRight.periodical(speed);
+      }
+
+      function moveRandom(speed) {
+        if (idTimer === null) idTimer = moveBallRandom.periodical(speed);
+      }
+
+      function moveChaos(speed) {
+        if (idTimer === null) idTimer = moveBallChaos.periodical(speed);
+      }
+
+      function stop() {
+        clearInterval(idTimer);
+        idTimer = null;
+        for (var i = 0; i < balls.length; i++) {
+          balls[i].dirInRandom = null;
+        }
+      }
+    </script>
+    <style type="text/css">
+      canvas {
+        border: 1px solid blue;
+      }
+    </style>
+  </head>
+  <body onload="init();">
+    <canvas id="canvas" width="600" height="400" onclick="goInput(event);">
+    </canvas>
+    <form>
+      <br />
+      <input
+        type="button"
+        value="Вверх"
+        onclick="stop(); moveUp(50);"
+        name="up-btn"
+      />
+      <input
+        type="button"
+        value="Вниз"
+        onclick="stop(); moveDown(50);"
+        name="down-btn"
+      />
+      <input
+        type="button"
+        value="Влево"
+        onclick="stop(); moveLeft(50);"
+        name="left-btn"
+      />
+      <input
+        type="button"
+        value="Вправо"
+        onclick="stop(); moveRight(50);"
+        name="right-btn"
+      />
+      <br />
+      <br />
+      <input
+        type="button"
+        value="Рандом"
+        onclick="stop(); moveRandom(50);"
+        name="randon-btn"
+      />
+      <input
+        type="button"
+        value="Хаос"
+        onclick="stop(); moveChaos(50);"
+        name="chaos-btn"
+      />
+      <br />
+      <br />
+      <input type="button" value="Стоп" onclick="stop()" />
+    </form>
+  </body>
+</html>
