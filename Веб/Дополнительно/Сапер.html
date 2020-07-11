@@ -11,7 +11,7 @@
       crossorigin="anonymous"
     />
     <style>
-      svg > text {
+      svg > g > text {
         font-weight: normal;
         font-size: 180%;
       }
@@ -39,11 +39,11 @@
       var gameOver = false;
       var amount = 8;
       var found = 0;
-      for (var i = 0; i < 81; i++) poly[i] = 0;
       function getRandomCell() {
         return Math.floor(Math.random() * 81);
       }
       function makePoly(n) {
+        for (var i = 0; i < 81; i++) poly[i] = 0;
         var k = 0;
         while (k < n) {
           var num = getRandomCell();
@@ -61,6 +61,7 @@
         }
       }
       function makeTable(n) {
+        document.getElementById("table").innerHTML = "";
         var smth = "";
         var k = 0;
         for (var i = 0; i < 450; i += 50) {
@@ -185,6 +186,11 @@
         alert("done");
         return false;
       }
+      function input() {
+        amount = document.getElementById("inputAmount").value;
+        document.getElementById("amount").innerHTML = amount;
+        makeTable();
+      }
     </script>
   </head>
   <body>
@@ -197,27 +203,102 @@
             Начать заново
           </button>
         </div>
-        <div class="col-3">
-          <button class="btn btn-secondary">
+        <div class="col-3 text-left">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-toggle="modal"
+            data-target="#exampleModal"
+          >
             Правила и настройки
           </button>
+
+          <div
+            class="modal fade"
+            id="exampleModal"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">
+                    Правила и настройки
+                  </h5>
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <ol>
+                    <li>
+                      Каждая ячейка содежит мину, либо цифру, которая обозначает
+                      количество мин в поле 9х9, центром которого является
+                      данная ячейка.
+                    </li>
+                    <li>
+                      Простой щелчок мышью устанавливает "флажок" (или убирает,
+                      если он уже есть).
+                    </li>
+                    <li>
+                      Двойной щелчок раскрывает содержимое ячейки
+                      (предварительно нужно снять флажок, если он есть).
+                    </li>
+                    <li>
+                      Ваша задача - определить местоположение всех мин и
+                      отметить их флажком.
+                    </li>
+                    <h5>Удачи!</h5>
+                    <label class="col-form-label"
+                      >Здесь вы можете изменить количество мин:</label
+                    >
+                    <!-- <input
+                      type="number"
+                      class="form-control"
+                      id="input"
+                      placeholder="8"
+                    /> -->
+                    <select class="form-control" id="inputAmount">
+                      <option>8</option>
+                      <option>12</option>
+                      <option>18</option>
+                      <option>24</option>
+                      <option>30</option>
+                    </select>
+                  </ol>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-dismiss="modal"
+                    onclick="input()"
+                  >
+                    Понятно
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <br />
       <div class="row">
         <div class="col-12">
-          <svg
-            class="main"
-            id="table"
-            width="450"
-            height="450"
-            viewbox="0 0 450 450"
-          >
+          <svg class="main" width="450" height="450" viewbox="0 0 450 450">
             <defs>
               <g id="elem">
                 <rect x="0" y="0" width="50" height="50" />
               </g>
             </defs>
+            <g id="table"></g>
           </svg>
         </div>
       </div>
