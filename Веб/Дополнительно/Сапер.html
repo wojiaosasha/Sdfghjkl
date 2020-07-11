@@ -11,63 +11,260 @@
       crossorigin="anonymous"
     />
     <style>
+      svg > text {
+        font-weight: normal;
+        font-size: 180%;
+      }
       .main {
         fill: rgb(192, 191, 191);
         stroke: black;
         stroke-width: 4px;
       }
-      /* rect {
-        transition: 0.5s all;
-      }
-      .main:hover rect {
-        fill: red;
-      } */
-
       .anim {
-        transition: 0.5s all;
+        transition: 0.1s all;
       }
       .anim:hover {
         fill: grey;
       }
+      .check {
+        fill: red;
+      }
+      .open {
+        fill: white;
+      }
     </style>
     <script>
+      //&#10006 - символ для мины
+      var poly = [81];
+      var gameOver = false;
+      var amount = 8;
+      var found = 0;
+      for (var i = 0; i < 81; i++) poly[i] = 0;
+      function getRandomCell() {
+        return Math.floor(Math.random() * 81);
+      }
+      function makePoly(n) {
+        var k = 0;
+        while (k < n) {
+          var num = getRandomCell();
+          if (poly[num] == -1) continue;
+          else {
+            poly[num] = -1;
+            k++;
+            var x = num % 9;
+            var y = Math.floor(num / 9);
+            for (var i = Math.max(0, x - 1); i <= Math.min(x + 1, 8); i++) {
+              for (var j = Math.max(0, y - 1); j <= Math.min(y + 1, 8); j++)
+                if (poly[j * 9 + i] != -1) poly[j * 9 + i]++;
+            }
+          }
+        }
+      }
       function makeTable(n) {
         var smth = "";
+        var k = 0;
         for (var i = 0; i < 450; i += 50) {
-          for (var j = 0; j < 450; j += 50)
+          for (var j = 0; j < 450; j += 50) {
             smth +=
               "<use x='" +
-              i +
-              "' y='" +
               j +
-              "' class='anim' xlink:href='#elem'/>";
+              "' y='" +
+              i +
+              "' ondblclick='return sapper(" +
+              k +
+              ")' onclick='return flag(" +
+              k +
+              ")' class='anim' xlink:href='#elem'/>";
+            k++;
+          }
         }
+        k = 0;
         document.getElementById("table").innerHTML += smth;
+        for (var i = 0; i < 450; i += 50) {
+          for (var j = 0; j < 450; j += 50) {
+            document.getElementById("table").innerHTML +=
+              "<text x='" +
+              (16 + j) +
+              "' y='" +
+              (34 + i) +
+              "' onclick='return sapper(" +
+              k +
+              ")' ondblclick='return flag(" +
+              k +
+              ")'></text>";
+            k++;
+          }
+        }
+        makePoly(amount); //тут можно изменить количество мин
+        document.getElementById("amount").innerHTML = amount;
+        return false;
+      }
+      function flag(n) {
+        if (
+          !gameOver &&
+          !document.getElementsByTagName("use")[n].classList.contains("open")
+        ) {
+          document.getElementsByTagName("use")[n].classList.toggle("anim");
+          document.getElementsByTagName("use")[n].classList.toggle("check");
+        }
+        if (document.getElementsByTagName("use")[n].classList.contains("check"))
+          found++;
+        else if (
+          document.getElementsByTagName("use")[n].classList.contains("anim")
+        )
+          found--;
+        document.getElementById("found").innerHTML = found;
+        if (found == amount) {
+          var success = true;
+          for (var i = 0; i < 81; i++) {
+            if (
+              poly[i] == -1 &&
+              !document
+                .getElementsByTagName("use")
+                [i].classList.contains("check")
+            ) {
+              success = false;
+              break;
+            }
+          }
+          if (success) {
+            lose();
+            document.getElementById("process").innerHTML =
+              "<h1>Вы выиграли!<h1>";
+          }
+        }
+        return false;
+      }
+      function sapper(n) {
+        if (
+          !gameOver &&
+          !document.getElementsByTagName("use")[n].classList.contains("check")
+        ) {
+          document.getElementsByTagName("use")[n].classList.add("open");
+          document.getElementsByTagName("use")[n].classList.remove("anim");
+          document.getElementsByTagName("use")[n].classList.remove("check");
+          if (poly[n] == -1) {
+            //вы проиграли
+            document.getElementsByTagName("text")[n].innerHTML = "&#10006";
+            lose();
+            gameOver = true;
+            document.getElementById("process").innerHTML =
+              "<h1>Вы проиграли :(<h1>";
+          } else if (poly[n] == 0) {
+            var x = n % 9;
+            var y = Math.floor(n / 9);
+            for (var i = Math.max(0, x - 1); i <= Math.min(x + 1, 8); i++) {
+              for (var j = Math.max(0, y - 1); j <= Math.min(y + 1, 8); j++) {
+                if (
+                  !document
+                    .getElementsByTagName("use")
+                    [j * 9 + i].classList.contains("open")
+                )
+                  sapper(j * 9 + i);
+                //alert(j*9+i);
+              }
+            }
+          } else document.getElementsByTagName("text")[n].innerHTML = poly[n];
+        }
+        return false;
+      }
+      function lose() {
+        for (var i = 0; i < 81; i++) {
+          if (
+            !document.getElementsByTagName("use")[i].classList.contains("open")
+          ) {
+            if (poly[i] == -1)
+              document.getElementsByTagName("text")[i].innerHTML = "&#10006";
+            else if (poly[i] != 0)
+              document.getElementsByTagName("text")[i].innerHTML = poly[i];
+          }
+        }
+      }
+      function check() {
+        document.getElementsByTagName("use")[0].classList.add("check");
+        alert("done");
         return false;
       }
     </script>
   </head>
   <body>
-    <div class="container">
-      <table class="table"></table>
+    <br />
+    <div class="container text-center">
+      <div class="row">
+        <div class="col-3"></div>
+        <div class="col-3">
+          <button class="btn btn-secondary" onclick="window.location.reload()">
+            Начать заново
+          </button>
+        </div>
+        <div class="col-3">
+          <button class="btn btn-secondary">
+            Правила и настройки
+          </button>
+        </div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="col-12">
+          <svg
+            class="main"
+            id="table"
+            width="450"
+            height="450"
+            viewbox="0 0 450 450"
+          >
+            <defs>
+              <g id="elem">
+                <rect x="0" y="0" width="50" height="50" />
+              </g>
+            </defs>
+          </svg>
+        </div>
+      </div>
+      <br />
+      <div id="process" class="text-center">
+        <div class="row">
+          <div class="col-3"></div>
+          <div class="col-3 text-right">
+            <button type="button" class="btn btn-danger">
+              Обнаружено: <span id="found" class="badge badge-light">2</span> /
+              <span id="amount">2</span>
+            </button>
+          </div>
+          <div class="col-3 text-left">
+            <!-- <button type="button" class="btn btn-success">
+              Подсказок:
+              <span class="badge badge-light" id="help">0</span>
+            </button> -->
+          </div>
+        </div>
+        <!-- <h1>Вы выиграли!</h1> -->
+      </div>
     </div>
 
-    <svg
-      class="main"
-      id="table"
-      width="1000"
-      height="1000"
-      viewbox="0 0 1000 1000"
-    >
-      <defs>
-        <rect id="elem" x="0" y="0" width="50" height="50" />
-      </defs>
-    </svg>
+    <!-- <div class="container text-center">
+      <svg
+        class="main"
+        id="table"
+        width="450"
+        height="450"
+        viewbox="0 0 450 450"
+      >
+        <defs>
+          <g id="elem">
+            <rect x="0" y="0" width="50" height="50" />
+          </g>
+        </defs>
+      </svg>
+    </div> -->
 
-    <svg class="main" width="1000" height="1000" viewbox="0 0 1000 1000">
-      <rect id="elem" x="0" y="0" width="50" height="50" />
-      <text
-    </svg>
+    <!-- <svg class="main" id="table" width="450" height="450" viewbox="0 0 450 450">
+      <defs>
+        <g id="elem">
+          <rect x="0" y="0" width="50" height="50" />
+        </g>
+      </defs>
+    </svg> -->
 
     <script>
       makeTable(10);
