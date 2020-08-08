@@ -39,6 +39,7 @@
       var gameOver = false;
       var amount = 8;
       var found = 0;
+      var reload = "";
       function getRandomCell() {
         return Math.floor(Math.random() * 81);
       }
@@ -187,9 +188,12 @@
         return false;
       }
       function input() {
+        document.getElementById("process").innerHTML = reload;
         amount = document.getElementById("inputAmount").value;
         document.getElementById("amount").innerHTML = amount;
         makeTable();
+        gameOver = false;
+        found = 0;
       }
     </script>
   </head>
@@ -199,7 +203,7 @@
       <div class="row">
         <div class="col-3"></div>
         <div class="col-3">
-          <button class="btn btn-secondary" onclick="window.location.reload()">
+          <button class="btn btn-secondary" onclick="input()">
             Начать заново
           </button>
         </div>
@@ -312,19 +316,14 @@
               <span id="amount">8</span>
             </button>
           </div>
-          <div class="col-3 text-left">
-            <!-- <button type="button" class="btn btn-success">
-              Подсказок:
-              <span class="badge badge-light" id="help">0</span>
-            </button> -->
-          </div>
+          <div class="col-3 text-left"></div>
         </div>
-        <!-- <h1>Вы выиграли!</h1> -->
       </div>
     </div>
 
     <script>
       makeTable(10);
+      reload = document.getElementById("process").innerHTML;
     </script>
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
